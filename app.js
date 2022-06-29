@@ -85,6 +85,7 @@ var app = new Vue({
         },
         credentials: 'include',
       });
+      console.log(response);
     },
   },
   created: function () {
