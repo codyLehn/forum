@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+}
+body {
+  height: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#app {
+  text-align: center;
+  margin: 10px;
+}
+#loginPage button {
+  margin-top: 5px;
+  justify-content: center;
+  align-items: center;
+}

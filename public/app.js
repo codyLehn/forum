@@ -2,14 +2,19 @@ const URL = 'https://forum2022.codeschool.cloud';
 var app = new Vue({
   el: '#app',
   data: {
+    page: 'login',
     loginEmailInput: '',
     loginPasswordInput: '',
 
     newEmailInput: '',
     newPasswordInput: '',
     fullNameInput: '',
+    threads: [],
   },
   methods: {
+    setPage: function (page) {
+      this.page = page;
+    },
     //ask the server if we are logged in
     getSession: async function () {
       let response = await fetch(`${URL}/session`, {
@@ -47,15 +52,28 @@ var app = new Vue({
         },
         credentials: 'include',
       });
+      // parse response body
+      let body;
+      try {
+        body = response.json();
+        //console.log(body);
+      } catch (error) {
+        console.log('Response body was not json.');
+      }
+
+      // check if login successful
       if (response.status == 201) {
         console.log('successful login attempt');
 
         // clear inputs
         this.loginEmailInput = '';
         this.loginPasswordInput = '';
+        // go to home page
+
+        // this.loadHomePage();
       } else if (response.status == 401) {
         console.log('Unsuccessful login attempt');
-
+        // let user know
         alert('unsuccessful login');
 
         //clear password input
@@ -68,8 +86,6 @@ var app = new Vue({
           response
         );
       }
-
-      console.log(response);
     },
     postUser: async function () {
       let newUser = {
@@ -85,7 +101,25 @@ var app = new Vue({
         },
         credentials: 'include',
       });
-      console.log(response);
+      let body;
+      try {
+        body = response.json();
+      } catch (error) {
+        console.error('Error parsing body as JSON:', error);
+        body = 'An Unknown Error has occurred';
+      }
+      if (response.status == 201) {
+        //user successfully created
+        this.newEmailInput = '';
+        this.newPasswordInput = '';
+        this.fullNameInput = '';
+        console.log(response);
+        this.setPage('login');
+      } else {
+        //error creating user
+        this.newPasswordInput = '';
+        // create notification
+      }
     },
   },
   created: function () {
